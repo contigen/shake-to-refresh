@@ -14,9 +14,11 @@ export function Shake() {
   const [acceleration, setAcceleration] =
     useState<DeviceMotionEventAcceleration | null>(null)
 
+  const vibrate = () => navigator.vibrate(200)
   async function reload() {
     setLoading(true)
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    vibrate()
+    await new Promise(resolve => setTimeout(resolve, 1500))
     window.location.reload()
   }
 
