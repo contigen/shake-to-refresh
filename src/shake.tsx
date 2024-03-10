@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { RotatingLines } from 'react-loader-spinner'
 
 const Spinner = (
@@ -19,9 +19,19 @@ export function Shake() {
     await new Promise(resolve => setTimeout(resolve, 2000))
     window.location.reload()
   }
-  window.addEventListener('devicemotion', evt => {
-    evt.acceleration && setAcceleration(evt.acceleration)
-  })
+
+  useEffect(() => {
+    function setMotionValues(evt: DeviceMotionEvent) {
+      if (evt.acceleration) {
+        setAcceleration(evt.acceleration)
+        console.log(Object.values(evt.acceleration))
+      }
+    }
+    return () => {
+      window.removeEventListener('devicemotion', setMotionValues)
+    }
+  }, [acceleration])
+
   return (
     <div>
       <h1>Shake!</h1>
@@ -29,11 +39,12 @@ export function Shake() {
         {loading && Spinner}
         <br />
         <button onClick={reload}>Reload</button>
-        {acceleration && (
-          <p>
-            {acceleration?.x} m/s<sup>2</sup>
-          </p>
-        )}
+        {acceleration &&
+          Object.values(acceleration).map(value => (
+            <p key={value}>
+              {value} m/s<sup>2</sup>
+            </p>
+          ))}
       </div>
     </div>
   )
