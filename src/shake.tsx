@@ -12,7 +12,7 @@ const Spinner = (
 export function Shake() {
   const acceleration = useDeviceAcceleration()
   const [loading, setLoading] = useState(false)
-  const [interval, updateInterval] = useState(0)
+  const [interval, updateInterval] = useState<number | undefined | null>()
   const vibrate = () => navigator.vibrate(200)
   async function reload() {
     setLoading(true)
@@ -21,7 +21,7 @@ export function Shake() {
     window.location.reload()
   }
   window.addEventListener(`devicemotion`, (evt: DeviceMotionEvent) => {
-    updateInterval(evt?.interval)
+    updateInterval(evt?.acceleration?.x)
   })
   return (
     <div>
