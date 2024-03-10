@@ -27,8 +27,9 @@ export function Shake() {
         console.log(Object.values(evt.acceleration))
       }
     }
+    window.addEventListener(`devicemotion`, setMotionValues)
     return () => {
-      window.removeEventListener('devicemotion', setMotionValues)
+      window.removeEventListener(`devicemotion`, setMotionValues)
     }
   }, [acceleration])
 
