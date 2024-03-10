@@ -12,13 +12,17 @@ const Spinner = (
 export function Shake() {
   const acceleration = useDeviceAcceleration()
   const [loading, setLoading] = useState(false)
+  const [interval, updateInterval] = useState(0)
   const vibrate = () => navigator.vibrate(200)
   async function reload() {
     setLoading(true)
     vibrate()
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    await new Promise(resolve => setTimeout(resolve, 2000))
     window.location.reload()
   }
+  window.addEventListener(`devicemotion`, (evt: DeviceMotionEvent) => {
+    updateInterval(evt?.interval)
+  })
   return (
     <div>
       <h1>Shake!</h1>
@@ -32,6 +36,7 @@ export function Shake() {
               {value} m/s<sup>2</sup>
             </p>
           ))}
+        <p>{interval}</p>
       </div>
     </div>
   )
@@ -43,8 +48,8 @@ function useDeviceAcceleration() {
   function subscribe() {
     const setMotionValues = (evt: DeviceMotionEvent) =>
       setAcceleration(evt.acceleration)
-    window.addEventListener('devicemotion', setMotionValues)
-    return () => window.removeEventListener('devicemotion', setMotionValues)
+    window.addEventListener(`devicemotion`, setMotionValues)
+    return () => window.removeEventListener(`devicemotion`, setMotionValues)
   }
   return useSyncExternalStore(subscribe, () => acceleration)
 }
