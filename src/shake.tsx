@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { RotatingLines } from 'react-loader-spinner'
 
 const Spinner = (
@@ -10,10 +10,8 @@ const Spinner = (
   />
 )
 export function Shake() {
+  const acceleration = useDeviceAcceleration()
   const [loading, setLoading] = useState(false)
-  const [acceleration, setAcceleration] =
-    useState<DeviceMotionEventAcceleration | null>(null)
-
   const vibrate = () => navigator.vibrate(200)
   async function reload() {
     setLoading(true)
@@ -21,20 +19,6 @@ export function Shake() {
     await new Promise(resolve => setTimeout(resolve, 1500))
     window.location.reload()
   }
-
-  useEffect(() => {
-    function setMotionValues(evt: DeviceMotionEvent) {
-      if (evt.acceleration) {
-        setAcceleration(evt.acceleration)
-        console.log(Object.values(evt.acceleration))
-      }
-    }
-    window.addEventListener(`devicemotion`, setMotionValues)
-    return () => {
-      window.removeEventListener(`devicemotion`, setMotionValues)
-    }
-  }, [acceleration])
-
   return (
     <div>
       <h1>Shake!</h1>
@@ -51,4 +35,16 @@ export function Shake() {
       </div>
     </div>
   )
+}
+
+function useDeviceAcceleration() {
+  const [acceleration, setAcceleration] =
+    useState<DeviceMotionEventAcceleration | null>(null)
+  function subscribe() {
+    const setMotionValues = (evt: DeviceMotionEvent) =>
+      setAcceleration(evt.acceleration)
+    window.addEventListener('devicemotion', setMotionValues)
+    return () => window.removeEventListener('devicemotion', setMotionValues)
+  }
+  return useSyncExternalStore(subscribe, () => acceleration)
 }
