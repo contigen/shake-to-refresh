@@ -34,6 +34,7 @@ export function Shake() {
         }
 
         const { x, y, z } = acceleration
+        console.log(x, y, z)
         const accelerationMagnitude = Math.sqrt(x ** 2 + y ** 2 + z ** 2)
         console.log(accelerationMagnitude)
         if (accelerationMagnitude >= 2) {
