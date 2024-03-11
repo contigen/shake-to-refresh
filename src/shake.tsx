@@ -1,4 +1,4 @@
-import { useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { RotatingLines } from 'react-loader-spinner'
 
 const Spinner = (
@@ -12,22 +12,43 @@ const Spinner = (
 export function Shake() {
   const acceleration = useDeviceAcceleration()
   const [loading, setLoading] = useState(false)
+
   const vibrate = () => navigator.vibrate(300)
-  async function reload() {
-    setLoading(true)
-    vibrate()
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    window.location.reload()
-  }
-  window.addEventListener(
-    `devicemotion`,
-    ({ acceleration }: DeviceMotionEvent) => {
-      if (!acceleration) return
-      if (acceleration.x && -2 <= acceleration.x && acceleration.x >= 2) {
-        reload()
-      }
-    }
+
+  const handleDeviceMotion = useCallback(
+    () =>
+      ({ acceleration }: DeviceMotionEvent) => {
+        async function reload() {
+          setLoading(true)
+          vibrate()
+          await new Promise(resolve => setTimeout(resolve, 1500))
+          window.location.reload()
+        }
+        if (
+          !acceleration ||
+          acceleration.x === null ||
+          acceleration.y === null ||
+          acceleration.z === null
+        ) {
+          return
+        }
+
+        const { x, y, z } = acceleration
+        const accelerationMagnitude = Math.sqrt(x ** 2 + y ** 2 + z ** 2)
+
+        if (accelerationMagnitude >= 15) {
+          reload()
+        }
+      },
+    []
   )
+
+  useEffect(() => {
+    window.addEventListener(`devicemotion`, handleDeviceMotion)
+    return () => {
+      window.removeEventListener(`devicemotion`, handleDeviceMotion)
+    }
+  }, [handleDeviceMotion])
 
   return (
     <div>
@@ -35,12 +56,12 @@ export function Shake() {
       <div className='center'>
         {loading && Spinner}
         <br />
-        {acceleration &&
-          Object.values(acceleration).map(value => (
-            <p key={value}>
-              {value} m/s<sup>2</sup>
-            </p>
-          ))}
+        {acceleration && (
+          <p>
+            Acceleration: {acceleration.x}, {acceleration.y}, {acceleration.z}{' '}
+            m/s<sup>2</sup>
+          </p>
+        )}
       </div>
     </div>
   )
