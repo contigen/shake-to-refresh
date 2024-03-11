@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 import { RotatingLines } from 'react-loader-spinner'
 
 const Spinner = (
@@ -12,7 +18,11 @@ const Spinner = (
 export function Shake() {
   const acceleration = useDeviceAcceleration()
   const [loading, setLoading] = useState(false)
-
+  const { x = null, y = null, z = null } = acceleration ?? {}
+  const accelerationMagnitude = useMemo(() => {
+    if (x === null || y === null || z === null) return null
+    return Math.sqrt(x ** 2 + y ** 2 + z ** 2)
+  }, [x, y, z])
   const vibrate = () => navigator.vibrate(300)
 
   const handleDeviceMotion = useCallback(
@@ -65,6 +75,7 @@ export function Shake() {
           </p>
         )}
       </div>
+      <p>acceleration magnitude :{accelerationMagnitude}</p>
     </div>
   )
 }
