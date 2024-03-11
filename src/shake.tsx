@@ -43,7 +43,7 @@ export function Shake() {
   }, [])
   useEffect(() => {
     if (!accelerationMagnitude) return
-    if (accelerationMagnitude >= 25) reload()
+    if (accelerationMagnitude >= 20) reload()
   }, [accelerationMagnitude, reload])
   return (
     <div>
