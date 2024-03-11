@@ -17,7 +17,7 @@ export function Shake() {
 
   const handleDeviceMotion = useCallback(
     () =>
-      ({ acceleration }: DeviceMotionEvent) => {
+      async ({ acceleration }: DeviceMotionEvent) => {
         async function reload() {
           setLoading(true)
           vibrate()
@@ -37,12 +37,11 @@ export function Shake() {
         const accelerationMagnitude = Math.sqrt(x ** 2 + y ** 2 + z ** 2)
 
         if (accelerationMagnitude >= 5) {
-          reload()
+          await reload()
         }
       },
     []
   )
-
   useEffect(() => {
     window.addEventListener(`devicemotion`, handleDeviceMotion)
     return () => {
