@@ -1,6 +1,5 @@
 :root {
   font-family: 'Geist Variable';
-  line-height: 1.5;
   font-weight: 450;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -9,10 +8,17 @@
 
 }
 
-h1 {
+h1,
+h2 {
   letter-spacing: -0.05em;
 }
 
 h1 {
   font-size: 3rem;
+}
+
+@media only screen and (max-width: 640px) {
+  h1 {
+    font-size: 2.5rem;
+  }
 }
