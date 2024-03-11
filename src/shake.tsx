@@ -15,6 +15,13 @@ const Spinner = (
     width='30'
   />
 )
+
+declare global {
+  interface DeviceMotionEvent {
+    requestPermission?: () => Promise<PermissionState>
+  }
+}
+
 export function Shake() {
   const acceleration = useDeviceAcceleration()
   const [loading, setLoading] = useState(false)
@@ -24,7 +31,10 @@ export function Shake() {
     return Math.sqrt(x ** 2 + y ** 2 + z ** 2)
   }, [x, y, z])
 
-  const vibrate = () => navigator.vibrate(300)
+  const vibrate = () => {
+    if (!navigator.vibrate) return
+    navigator.vibrate(300)
+  }
   const reload = useCallback(async () => {
     setLoading(true)
     vibrate()
@@ -33,7 +43,7 @@ export function Shake() {
   }, [])
   useEffect(() => {
     if (!accelerationMagnitude) return
-    if (accelerationMagnitude >= 10) reload()
+    if (accelerationMagnitude >= 25) reload()
   }, [accelerationMagnitude, reload])
   return (
     <div>
@@ -59,6 +69,26 @@ function useDeviceAcceleration() {
   function subscribe() {
     const setMotionValues = (evt: DeviceMotionEvent) =>
       setAcceleration(evt.acceleration)
+    function deviceMotionPermissionRequest() {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      if (typeof DeviceMotionEvent.requestPermission === `function`) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        DeviceMotionEvent.requestPermission()
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          .then(permissionState => {
+            if (permissionState === `granted`) {
+              window.addEventListener(`devicemotion`, setMotionValues)
+            }
+          })
+          .catch(console.error)
+      } else {
+        window.addEventListener(`devicemotion`, setMotionValues)
+      }
+    }
+    deviceMotionPermissionRequest()
     window.addEventListener(`devicemotion`, setMotionValues)
     return () => window.removeEventListener(`devicemotion`, setMotionValues)
   }
