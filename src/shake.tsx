@@ -18,6 +18,7 @@ export function Shake() {
   const handleDeviceMotion = useCallback(
     () =>
       async ({ acceleration }: DeviceMotionEvent) => {
+        console.log(`fire`)
         async function reload() {
           setLoading(true)
           vibrate()
