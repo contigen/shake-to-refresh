@@ -12,31 +12,35 @@ const Spinner = (
 export function Shake() {
   const acceleration = useDeviceAcceleration()
   const [loading, setLoading] = useState(false)
-  const [interval, updateInterval] = useState<number | undefined | null>()
-  const vibrate = () => navigator.vibrate(200)
+  const vibrate = () => navigator.vibrate(300)
   async function reload() {
     setLoading(true)
     vibrate()
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    await new Promise(resolve => setTimeout(resolve, 1500))
     window.location.reload()
   }
-  window.addEventListener(`devicemotion`, (evt: DeviceMotionEvent) => {
-    updateInterval(evt?.acceleration?.x)
-  })
+  window.addEventListener(
+    `devicemotion`,
+    ({ acceleration }: DeviceMotionEvent) => {
+      if (!acceleration) return
+      if (acceleration.x && -2 <= acceleration.x && acceleration.x >= 2) {
+        reload()
+      }
+    }
+  )
+
   return (
     <div>
       <h1>Shake!</h1>
       <div className='center'>
         {loading && Spinner}
         <br />
-        <button onClick={reload}>Reload</button>
         {acceleration &&
           Object.values(acceleration).map(value => (
             <p key={value}>
               {value} m/s<sup>2</sup>
             </p>
           ))}
-        <p>{interval}</p>
       </div>
     </div>
   )
