@@ -32,37 +32,6 @@ export function Shake() {
     window.location.reload()
   }, [])
 
-  // const handleDeviceMotion = useCallback(
-  //   () =>
-  //     async ({ acceleration }: DeviceMotionEvent) => {
-  //       console.log(`fire`)
-  //       if (
-  //         !acceleration ||
-  //         acceleration.x === null ||
-  //         acceleration.y === null ||
-  //         acceleration.z === null
-  //       ) {
-  //         return
-  //       }
-
-  //       const { x, y, z } = acceleration
-  //       console.log(x, y, z)
-  //       const accelerationMagnitude = Math.sqrt(x ** 2 + y ** 2 + z ** 2)
-  //       console.log(accelerationMagnitude)
-  //       if (accelerationMagnitude >= 2) {
-  //         console.log(`reloading`)
-  //         await reload()
-  //       }
-  //     },
-  //   [reload]
-  // )
-  // useEffect(() => {
-  //   window.addEventListener(`devicemotion`, handleDeviceMotion)
-  //   return () => {
-  //     window.removeEventListener(`devicemotion`, handleDeviceMotion)
-  //   }
-  // }, [handleDeviceMotion])
-
   useEffect(() => {
     if (!accelerationMagnitude) return
     if (accelerationMagnitude >= 10) reload()
@@ -70,18 +39,9 @@ export function Shake() {
   return (
     <div>
       <h1>Shake!</h1>
-      <div className='center'>
-        {loading && Spinner}
-        <br />
-        {acceleration && (
-          <p>
-            Acceleration: {acceleration.x}, {acceleration.y}, {acceleration.z}{' '}
-            m/s<sup>2</sup>
-          </p>
-        )}
-      </div>
+      <div className='center'>{loading && Spinner}</div>
       {accelerationMagnitude && (
-        <p>acceleration magnitude :{accelerationMagnitude}</p>
+        <p>Acceleration Magnitude :{accelerationMagnitude}</p>
       )}
     </div>
   )
