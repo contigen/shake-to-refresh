@@ -31,7 +31,6 @@ export function Shake() {
     await new Promise(resolve => setTimeout(resolve, 1500))
     window.location.reload()
   }, [])
-
   useEffect(() => {
     if (!accelerationMagnitude) return
     if (accelerationMagnitude >= 10) reload()
@@ -39,6 +38,13 @@ export function Shake() {
   return (
     <div>
       <h1>Shake!</h1>
+      <h2>
+        {navigator.userActivation.isActive ||
+        navigator.userActivation.hasBeenActive
+          ? `User Interaction confirmed`
+          : `Interact with the page to allow
+        vibration, just touch the screen or whatever.`}
+      </h2>
       <div className='center'>{loading && Spinner}</div>
       {accelerationMagnitude && (
         <p>Acceleration Magnitude :{accelerationMagnitude}</p>
