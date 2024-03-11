@@ -36,7 +36,7 @@ export function Shake() {
         const { x, y, z } = acceleration
         const accelerationMagnitude = Math.sqrt(x ** 2 + y ** 2 + z ** 2)
 
-        if (accelerationMagnitude >= 15) {
+        if (accelerationMagnitude >= 5) {
           reload()
         }
       },
