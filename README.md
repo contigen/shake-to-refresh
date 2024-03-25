@@ -1,30 +1,19 @@
-# React + TypeScript + Vite
+# Shake
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Shake your device to refresh with vibration.<br/>
+This is a fun pilot project inspired when exploring the web docs for the Device Motion event.
 
-Currently, two official plugins are available:
+Written in React & TypeScript with Vite.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Issues
 
-## Expanding the ESLint configuration
+- Doesn't work on iOS & Firefox Android due to inadequate user activation - some permission, privacy thingy (the event is well supported) - It is a proof of concept so it was done rather hasty.
+- The Vibration API isn't supported in Firefox Android & Safari, hence all iOS browsers.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Fun fact
 
-- Configure the top-level `parserOptions` property like this:
+No `UseEffect`, this project was also an opportunity to use React’s `useSynExternalStore` hook - cool!
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+#### PS
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+I don't think you would test this on desktop, anyhow, I didn't.
