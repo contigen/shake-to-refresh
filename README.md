@@ -1,5 +1,7 @@
 # Shake
 
+<img src='./src/assets/shake.png' style="mix-blend-mode:multiply"/>
+
 Shake your device to refresh with vibration.<br/>
 This is a fun pilot project inspired when exploring the web docs for the Device Motion event.
 
